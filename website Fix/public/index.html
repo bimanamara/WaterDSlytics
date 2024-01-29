@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Water Deep System Analytics</title>
+
+    <!-- include Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/8.8.1/firebase-app.js"></script>
+
+    <!-- include only the Firebase features as you need -->
+    <script src="https://www.gstatic.com/firebasejs/8.8.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.8.1/firebase-database.js"></script>
+
+    <script>
+      // Replace with your app config object
+      const firebaseConfig = {  
+        apiKey: "AIzaSyAYA6IXorCKPvEk8MW8LusEfTEMCORieiI",
+        authDomain: "kedalamanair.firebaseapp.com",
+        databaseURL: "https://kedalamanair-default-rtdb.asia-southeast1.firebasedatabase.app",
+        projectId: "kedalamanair",
+        storageBucket: "kedalamanair.appspot.com",
+        messagingSenderId: "299604665339",
+        appId: "1:299604665339:web:3a3dea843f57042df6a15e"
+      };
+
+      // Initialize firebase
+      firebase.initializeApp(firebaseConfig);
+
+      // Make auth and database references
+      const auth = firebase.auth();
+      const db = firebase.database();
+
+    </script>
+  
+    <!-- include highchartsjs to build the charts-->
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <!-- include to use jquery-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <!--include icons from fontawesome-->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+    <!-- include Gauges Javascript library-->
+    <script src="https://cdn.rawgit.com/Mikhus/canvas-gauges/gh-pages/download/2.1.7/all/gauge.min.js"></script>
+    <!--reference for favicon-->
+    <link rel="icon" type="image/png" href="favicon.png">
+    <!--reference a stylesheet-->
+    <link rel="stylesheet" type="text/css" href="style.css">
+
+  </head>
+
+  <body>
+
+    <!--TOP BAR-->
+    <div class="topnav">
+      <h1>Desain Proyek Teknik Elektro</h1>
+    </div>
+
+    <!--AUTHENTICATION BAR (USER DETAILS/LOGOUT BUTTON)-->
+      <p style="display: none;><span id="authentication-status">Judul Proyek:</span>
+        <span id="user-details">USEREMAIL</span>
+      </p>
+	
+    <div id="authentication-bar">
+      <p><span id="authentication-status" style= "font-weight: bold">Judul Proyek:</span>
+        <span id="user-details"><br><br>Integrated Water Depth Monitoring System With IoT-Based</span> <br><br><br>
+				<a href="#" class="click">Detail Proyek</a>
+		
+		<div class="popup_box">
+		  <i class=="fas fa-exclamation"></i>
+		  <p style="font-family: Lato; font-size: 20px; text-align: justify;"><br><br><br><br><br><br><br><br><br><br><br>
+		  <br><br><br>
+			Water Deep System Analytics (WaterDSlythic) merupakan alat pengukur kedalaman air tanah/sumur
+			yang bekerja dengan memanfaatkan sensor TDS sebagai pendeteksi air dan juga ESP32 sebagai mikrokontroller.
+			WaterDSlythic sudah berbasis web-based sehingga hasil pengukuran dapat dimonitor secara online. <br>
+			Proyek ini dibuat oleh 
+			kelompok 2.9 yang beranggotakan:
+					  <br><br>
+		      - Andreas Anugerah Pitoyo	<br>(2006523584)
+			  <br>
+			- Bima Adinata Namara	<br>(2006574566)
+			<br>
+    - Ivan Hans Gilbert Sihotang <br>(2006574805)
+	<br>
+    - Rifqi Annas Albasyahri <br>(2006574370)
+	
+		  <br><br>
+		  Analisis :<br>
+Diketahui sumur i-cell kedalamannya sekitar 20 meter, dan belum ada hujan.<br>
+Dari hari rabu - jumat ada 5 data berbeda,<br>
+Rabu pagi kedalaman ditemukan airnya normal, yaitu 17,51 meter.<br>
+Saat rabu siang dan sore terjadi hujan deras, sehingga air tanahnya naik.<br>
+Sehingga, data rabu sore alat kami mendeteksi kedalaman ditemukan airnya menjadi 12,14 meter, berarti airnya memang naik semakin dekat ke permukaan. 
+Setelah itu tidak ada hujan lagi.<br>
+Sehingga, data kamis dari kamis pagi, kamis sore, dan jumat siang kembali ke level normal. Itu dikarenakan tanah menyerap air secara perlahan.<br>
+<br>
+Kesimpulannya, alat ini berhasil mendeteksi kedalaman ditemukannya air tanah dan saat study case hujan ditunjukkan mengenai kemampuan serapan air saat ada hujan.<br>
+Ketersediaan air tanah di sumur I-Cell termasuk melimpah apalagi setelah hujan, untuk cadangan airnya bisa digunakan sebagai sumber air baru bagi gedung I-Cell.
+		  </p>
+		  <div class="btns">
+			<a href="#" class="btn1">Kembali</a>
+		  </div>
+		</div>
+      </p>
+<br>
+    </div>
+	
+    <!--LOGIN FORM-->
+    <form id="login-form" style="display: none;">
+      <div class="form-elements-container">
+        <label for="input-email"><b>Email</b></label>
+        <input type="text" placeholder="Enter Username" id="input-email" required>
+
+        <label for="input-password"><b>Password</b></label>
+        <input type="password" placeholder="Enter Password" id="input-password" required>
+
+        <button type="submit" id="login-button">Login</button>
+        <p id="error-message" style="color:red;"></p>
+      </div>
+    </form>
+
+    <!--CONTENT (SENSOR READINGS)-->
+    <div class="content-sign-in" id="content-sign-in" style="display: none;">
+
+      <!--LAST UPDATE-->
+      <p><span class ="date-time">Update terakhir: <span id="lastUpdate"></span></span></p>
+      <p style="display: none;">
+        Cards: <input type="checkbox"  id="cards-checkbox" name="cards-checkbox" unchecked>
+        Gauges: <input type="checkbox" id="gauges-checkbox" name="gauges-checkbox" unchecked>
+        Charts: <input type="checkbox" id="charts-checkbox" name="charts-checkbox" checked>
+      </p>
+      <div id="cards-div">
+        <div class="cards">
+          <!--TEMPERATURE-->
+          <div class="card">
+            <p><i class="fas fa-water" style="color:#059e8a;"></i> Kedalaman Air Tanah Saat Ini</p>
+            <p><span class="reading"><span id="temp"></span> m</span></p>
+          </div>
+          <!--HUMIDITY-->
+          <div class="card" style="display: none;">
+            <p><i class="fas fa-tint" style="color:#00add6;"></i> HUMIDITY</p>
+            <p><span class="reading"><span id="hum"></span> &percnt;</span></p>
+          </div>
+          <!--PRESSURE-->
+          <div class="card" style="display: none;">
+            <p><i class="fas fa-angle-double-down" style="color:#e1e437;"></i> PRESSURE</p>
+            <p><span class="reading"><span id="pres"></span> hPa</span></p>
+          </div>
+        </div>
+      </div>
+      <!--GAUGES-->
+      <div id ="gauges-div" style= "display:none;">
+        <div class="cards">
+          <!--TEMPERATURE-->
+          <div class="card">
+            <canvas id="gauge-temperature"></canvas>
+          </div>
+          <!--HUMIDITY-->
+          <div class="card">
+            <canvas id="gauge-humidity"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!--CHARTS-->
+      <div id="charts-div">
+        <!--SET NUMBER OF READINGS INPUT FIELD-->
+        <div>
+          <p> Banyak data grafik: <input type="number" id="charts-range"></p>
+        </div>
+        <!--TEMPERATURE-CHART-->
+        <div class="cards">
+          <div class="card">
+            <p><i class="fas fa-water" style="color:#059e8a;"></i> Grafik Kedalaman Ditemukannya Air Tanah </p>
+            <div id="chart-temperature" class="chart-container"></div>
+          </div>
+        </div>
+        <!--HUMIDITY-CHART-->
+        <div class="cards" style="display: none;">
+          <div class="card">
+            <p><i class="fas fa-tint" style="color:#00add6;"></i> HUMIDITY CHART</p>
+            <div id="chart-humidity" class="chart-container"></div>
+          </div>
+        </div>
+        <!--PRESSURE-CHART-->
+        <div class="cards" style="display: none;">
+          <div class="card">
+            <p><i class="fas fa-angle-double-down" style="color:#e1e437;"></i> PRESSURE CHART</p>
+            <div id="chart-pressure" class="chart-container"></div>
+          </div>
+        </div>
+      </div>
+
+    <!--BUTTONS TO HANDLE DATA-->
+    <p>
+      <!--View data button-->
+      <button id="view-data-button" style= "width:30%;">Perlihatkan Tabel</button>
+      <!--Hide data button-->
+      <button id="hide-data-button" style= "display:none; width:30%;">Sembunyikan Tabel</button>
+      <!--Delete data button-->
+      <button id="delete-button" class="deletebtn" style= "display:none;">Delete data</button>
+    </p>
+    <!--Modal to delete data-->
+    <div id="delete-modal" class="modal" sytle="display:none">
+      <span onclick = "document.getElementById('delete-modal').style.display='none'" class="close" title="Close Modal">×</span>
+      <form id= "delete-data-form" class="modal-content" action="/">
+        <div class="container">
+          <h1>Delete Data</h1>
+          <p>Are you sure you want to delete all data from database?</p>
+          <div class="clearfix">
+            <button type="button" onclick="document.getElementById('delete-modal').style.display='none'" class="cancelbtn">Cancel</button>
+            <button type="submit" onclick="document.getElementById('delete-modal').style.display='none'" class="deletebtn">Delete</button>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <!--TABLE WITH ALL DATA-->
+    <div class ="cards">
+      <div class="card" id="table-container" style= "display:none;">
+        <table id="readings-table">
+            <tr id="theader">
+			  <th>No</th>
+              <th>Tanggal</th>
+			  <th>Waktu</th>
+              <th>Kedalaman Air (m)</th>
+              <th style= "display:none;">Pres (hPa)</th>
+            </tr>
+            <tbody id="tbody">
+            </tbody>
+        </table>
+        <p style= "display:none;"><button id="load-data" style= "display:none; width:53%;">Tampilkan lebih banyak...</button></p>
+      </div>
+    </div>
+
+  </div>
+
+    <!--INCLUDE JS FILES-->
+    <script src="scripts/auth.js"></script>
+    <script src="scripts/charts-definition.js"></script>
+    <script src="scripts/gauges-definition.js"></script>
+    <script src="scripts/index.js"></script>
+
+	  <script>
+    // Set the initial value of the input to 10
+    document.getElementById('charts-range').value = 10;
+  </script>
+  
+  	<script>
+    $(document).ready(function(){
+      $('.click').click(function(){
+        $('.popup_box').css("display", "block");
+      });
+      $('.btns').click(function(){
+        $('.popup_box').css("display", "none");
+      });
+    });
+	</script>
+  </body>
+
+</html>
